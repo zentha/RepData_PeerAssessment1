@@ -30,6 +30,7 @@ Total_Week_Steps <- activity[, c(lapply(.SD, sum, na.rm = FALSE)), .SDcols = c("
 ```
 
 2.If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day
+A histogram represents the frequency distribution of continuous variables. Conversely, a bar graph is a diagrammatic comparison of discrete variables. Histogram presents numerical data whereas bar graph shows categorical data.
 
 ```{r}
 ggplot(Total_Week_Steps, aes(x = steps)) +
