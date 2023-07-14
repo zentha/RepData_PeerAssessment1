@@ -18,7 +18,7 @@ fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
 download.file(fileUrl, destfile = paste0(getwd(), '/repdata%2Fdata%2Factivity.zip'), method = "curl")
 unzip("repdata%2Fdata%2Factivity.zip",exdir = "data")
 
-activity <- data.table::fread(input = "data/activity.csv")
+as.data.table(read.csv(file = "data/activity.csv", header = TRUE))
 ```
 
 ## What is mean total number of steps taken per day?
