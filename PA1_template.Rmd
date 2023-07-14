@@ -90,3 +90,32 @@ ggplot(Total_Week_Steps, aes(x = steps)) +
   geom_histogram(fill = "blue", binwidth = 1000) + 
   labs(title = "Daily Steps", x = "Steps", y = "Frequency")
 ```
+
+## Are there differences in activity patterns between weekdays and weekends?
+
+1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
+Sorry my computer is in french so the week day are in French
+Lundi means Monday, Mardi means Tuesday, Mercredi means Wenesday ... 
+
+```{r}
+
+activity[, date := as.POSIXct(date, format = "%Y-%m-%d")]
+activity[, `Day of Week`:= weekdays(x = date)]
+activity[grepl(pattern = "lundi|mardi|mercredi|jeudi|vendredi", x = `Day of Week`), "weekday or weekend"] <- "weekday"
+activity[grepl(pattern = "samedi|dimanche", x = `Day of Week`), "weekday or weekend"] <- "weekend"
+activity[, `weekday or weekend` := as.factor(`weekday or weekend`)]
+head(activity, 10)
+```
+
+2. Make a panel plot containing a time series plot (i.e. 𝚝𝚢𝚙𝚎 = "𝚕") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
+
+```{r}
+activity[is.na(steps), "steps"] <- activity[, c(lapply(.SD, median, na.rm = TRUE)), .SDcols = c("steps")]
+Interval <- activity[, c(lapply(.SD, mean, na.rm = TRUE)), .SDcols = c("steps"), by = .(interval, `weekday or weekend`)] 
+
+ggplot(Interval , aes(x = interval , y = steps, color=`weekday or weekend`)) + 
+  geom_line() + 
+  labs(title = "Avgerage Daily Steps by Weektype", x = "Interval", y = "No. of Steps") +
+  facet_wrap(~`weekday or weekend` , ncol = 1, nrow=2)
+```
