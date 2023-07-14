@@ -7,10 +7,40 @@ output:
     keep_md: true
 ---
 
-
 ## Loading and preprocessing the data
+First, we unzip data in order to obtain a csv file that we can work on and we save it into a dataframe named activity
 
+```{r}
+library("data.table")
+library(ggplot2)
 
+fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
+download.file(fileUrl, destfile = paste0(getwd(), '/repdata%2Fdata%2Factivity.zip'), method = "curl")
+unzip("repdata%2Fdata%2Factivity.zip",exdir = "data")
+
+activity <- data.table::fread(input = "data/activity.csv")
+```
+
+## What is mean total number of steps taken per day?
+1. Calculate the total number of steps taken per day
+
+```{r}
+Total_Week_Steps <- activity[, c(lapply(.SD, sum, na.rm = FALSE)), .SDcols = c("steps"), by = .(date)] 
+
+```
+
+2.If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day
+
+```{r}
+ggplot(Total_Week_Steps, aes(x = steps)) +
+    geom_histogram(fill = "blue", binwidth = 1000) +
+    labs(title = "Daily Steps", x = "Steps", y = "Frequency")
+```
+
+3.Calculate and report the mean and median of the total number of steps taken per day
+```{r}
+Total_Week_Steps[, .(Mean_Steps = mean(steps, na.rm = TRUE), Median_Steps = median(steps, na.rm = TRUE))]
+```
 
 ## What is mean total number of steps taken per day?
 
